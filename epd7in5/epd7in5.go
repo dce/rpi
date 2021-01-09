@@ -24,8 +24,8 @@ import (
 )
 
 const (
-	EPD_WIDTH  int = 640
-	EPD_HEIGHT int = 384
+	EPD_WIDTH  int = 880
+	EPD_HEIGHT int = 528
 )
 
 const (
