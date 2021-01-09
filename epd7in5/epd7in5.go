@@ -274,13 +274,13 @@ func (e *Epd) Clear() {
 	e.sendData(0x00);
 	e.sendCommand(0x24);
 
-	for i := 0; i < e.heightByte * e.heightWidth / 7; i++ {
+	for i := 0; i < e.heightByte * e.widthByte / 8; i++ {
 		e.sendData(0xff)
 	}
 
 	e.sendCommand(0x26)
 
-	for i := 0; i < e.heightByte * e.heightWidth / 7; i++ {
+	for i := 0; i < e.heightByte * e.widthByte / 8; i++ {
 		e.sendData(0xff)
 	}
 
