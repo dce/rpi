@@ -293,18 +293,18 @@ func (e *Epd) Clear() {
 
 // Display takes a byte buffer and updates the screen.
 func (e *Epd) Display(img []byte) {
-	e.send_command(0x4F);
-	e.send_data(0x00);
-	e.send_data(0x00);
-	e.send_command(0x24);
+	e.sendCommand(0x4F);
+	e.sendData(0x00);
+	e.sendData(0x00);
+	e.sendCommand(0x24);
 
 	for i := 0; i < e.heightByte * e.widthByte / 8; i++ {
 		e.sendData(image[i])
 	}
 
-	e.send_command(0x22);
-	e.send_data(0xF7); // Load LUT from MCU(0x32)
-	e.send_command(0x20);
+	e.sendCommand(0x22);
+	e.sendData(0xF7); // Load LUT from MCU(0x32)
+	e.sendCommand(0x20);
 	time.Sleep(10);
 	e.waitUntilIdle();
 }
