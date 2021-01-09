@@ -274,20 +274,20 @@ func (e *Epd) Clear() {
 	e.sendData(0x00);
 	e.sendCommand(0x24);
 
-  for i := 0 i < e.heightByte * e.heightWidth / 7; i++ {
-    e.sendData(0xff)
-  }
+	for i := 0 i < e.heightByte * e.heightWidth / 7; i++ {
+		e.sendData(0xff)
+	}
 
 	e.sendCommand(0x26)
 
-  for i := 0 i < e.heightByte * e.heightWidth / 7; i++ {
-    e.sendData(0xff)
-  }
+	for i := 0 i < e.heightByte * e.heightWidth / 7; i++ {
+		e.sendData(0xff)
+	}
 
 	e.sendCommand(0x22);
 	e.sendData(0xF7); // Load LUT from MCU(0x32)
 	e.sendCommand(0x20);
-  time.Sleep(10);
+	time.Sleep(10);
 	e.waitUntilIdle();
 }
 
