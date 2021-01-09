@@ -269,17 +269,26 @@ func (e *Epd) Init() {
 
 // Clear clears the screen.
 func (e *Epd) Clear() {
-	e.sendCommand(DATA_START_TRANSMISSION_1)
+	e.sendCommand(0x4F);
+	e.sendData(0x00);
+	e.sendData(0x00);
+	e.sendCommand(0x24);
 
-	for j := 0; j < e.heightByte; j++ {
-		for i := 0; i < e.widthByte; i++ {
-			for k := 0; k < 4; k++ {
-				e.sendData(0x33)
-			}
-		}
-	}
+  for i := 0 i < e.heightByte * e.heightWidth / 7; i++ {
+    e.sendData(0xff)
+  }
 
-	e.turnOnDisplay()
+	e.sendCommand(0x26)
+
+  for i := 0 i < e.heightByte * e.heightWidth / 7; i++ {
+    e.sendData(0xff)
+  }
+
+	e.sendCommand(0x22);
+	e.sendData(0xF7); // Load LUT from MCU(0x32)
+	e.sendCommand(0x20);
+  time.Sleep(10);
+	e.waitUntilIdle();
 }
 
 // Display takes a byte buffer and updates the screen.
