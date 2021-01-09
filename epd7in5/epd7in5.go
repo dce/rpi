@@ -13,7 +13,6 @@ import (
 	"image"
 	"image/color"
 	"time"
-	"// log"
 
 	"periph.io/x/periph/conn"
 	"periph.io/x/periph/conn/gpio"
