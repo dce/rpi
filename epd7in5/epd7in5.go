@@ -205,33 +205,33 @@ func (e *Epd) turnOnDisplay() {
 func (e *Epd) Init() {
 	e.Reset()
 
-	e.waitUntilIdle();
-        e.sendCommand(0x12);  #SWRESET
-	e.waitUntilIdle();
+        e.waitUntilIdle();
+        e.sendCommand(0x12);  // SWRESET
+        e.waitUntilIdle();
 
-        e.sendCommand(0x46);  # Auto Write Red RAM
+        e.sendCommand(0x46);  // Auto Write Red RAM
         e.sendData(0xf7);
-	e.waitUntilIdle();
-        e.sendCommand(0x47);  # Auto Write  B/W RAM
+        e.waitUntilIdle();
+        e.sendCommand(0x47);  // Auto Write  B/W RAM
         e.sendData(0xf7);
-	e.waitUntilIdle();
+        e.waitUntilIdle();
 
-        e.sendCommand(0x0C);  # Soft start setting
+        e.sendCommand(0x0C);  // Soft start setting
         e.sendData(0xAE);
         e.sendData(0xC7);
         e.sendData(0xC3);
         e.sendData(0xC0);
         e.sendData(0x40); 
 
-        e.sendCommand(0x01);  # Set MUX as 527
+        e.sendCommand(0x01);  // Set MUX as 527
         e.sendData(0xAF);
         e.sendData(0x02);
-        e.sendData(0x01);#0x01
+        e.sendData(0x01);//0x01
 
-        e.sendCommand(0x11);  # Data entry mode      
+        e.sendCommand(0x11);  // Data entry mode      
         e.sendData(0x01);
         e.sendCommand(0x44);
-        e.sendData(0x00); # RAM x address start at 0
+        e.sendData(0x00); // RAM x address start at 0
         e.sendData(0x00);
         e.sendData(0x6F);
         e.sendData(0x03);
@@ -241,24 +241,25 @@ func (e *Epd) Init() {
         e.sendData(0x00);
         e.sendData(0x00);
 
-        e.sendCommand(0x3C); # VBD
-        e.sendData(0x05); # LUT1, for white
+        e.sendCommand(0x3C); // VBD
+        e.sendData(0x05); // LUT1, for white
 
         e.sendCommand(0x18);
         e.sendData(0X80);
 
 
         e.sendCommand(0x22);
-        e.sendData(0XB1); #Load Temperature and waveform setting.
+        e.sendData(0XB1); // Load Temperature and waveform setting.
         e.sendCommand(0x20);
         e.ReadBusy();
 
-        e.sendCommand(0x4E); # set RAM x address count to 0;
+        e.sendCommand(0x4E); // set RAM x address count to 0;
         e.sendData(0x00);
         e.sendData(0x00);
         e.sendCommand(0x4F);
         e.sendData(0x00);
         e.sendData(0x00);
+
 
 }
 
