@@ -278,6 +278,12 @@ func (e *Epd) Clear() {
 		e.sendData(0xff)
 	}
 
+	e.sendCommand(0x26)
+
+	for i := 0; i < e.heightByte * e.widthByte / 8; i++ {
+		e.sendData(0xff)
+	}
+
 	e.sendCommand(0x22);
 	e.sendData(0xF7); // Load LUT from MCU(0x32)
 	e.sendCommand(0x20);
@@ -297,8 +303,8 @@ func (e *Epd) Display(img []byte) {
 	}
 
 	e.sendCommand(0x22);
-	// e.sendData(0xF7); // Load LUT from MCU(0x32)
-	// e.sendCommand(0x20);
+	e.sendData(0xF7); // Load LUT from MCU(0x32)
+	e.sendCommand(0x20);
 	time.Sleep(10);
 	e.waitUntilIdle();
 }
