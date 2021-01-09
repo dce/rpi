@@ -296,7 +296,7 @@ func (e *Epd) Display(img []byte) {
     e.sendData(^img[i])
 	}
 
-	// e.sendCommand(0x22);
+	e.sendCommand(0x22);
 	// e.sendData(0xF7); // Load LUT from MCU(0x32)
 	// e.sendCommand(0x20);
 	time.Sleep(10);
