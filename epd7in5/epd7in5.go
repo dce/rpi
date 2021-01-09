@@ -195,7 +195,7 @@ func (e *Epd) sendData(data byte) {
 func (e *Epd) waitUntilIdle() {
 	log.Println("wait until idle")
 
-	for e.busy.Read() == gpio.Low {
+	for e.busy.Read() == gpio.High {
 		log.Println("waiting...")
 		time.Sleep(100 * time.Millisecond)
 	}
