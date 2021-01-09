@@ -13,7 +13,7 @@ import (
 	"image"
 	"image/color"
 	"time"
-	"log"
+	"// log"
 
 	"periph.io/x/periph/conn"
 	"periph.io/x/periph/conn/gpio"
@@ -167,7 +167,7 @@ func New(dcPin, csPin, rstPin, busyPin string) (*Epd, error) {
 
 // Reset can be also used to awaken the device.
 func (e *Epd) Reset() {
-	log.Println("Reset")
+	// log.Println("Reset")
 	e.rst.Out(gpio.High)
 	time.Sleep(200 * time.Millisecond)
 	e.rst.Out(gpio.Low)
@@ -177,7 +177,7 @@ func (e *Epd) Reset() {
 }
 
 func (e *Epd) sendCommand(cmd byte) {
-	log.Println("sendCommand")
+	// log.Println("sendCommand")
 	e.dc.Out(gpio.Low)
 	e.cs.Out(gpio.Low)
 	e.c.Tx([]byte{cmd}, nil)
@@ -185,7 +185,7 @@ func (e *Epd) sendCommand(cmd byte) {
 }
 
 func (e *Epd) sendData(data byte) {
-	log.Println("sendData")
+	// log.Println("sendData")
 	e.dc.Out(gpio.High)
 	e.cs.Out(gpio.Low)
 	e.c.Tx([]byte{data}, nil)
@@ -193,10 +193,10 @@ func (e *Epd) sendData(data byte) {
 }
 
 func (e *Epd) waitUntilIdle() {
-	log.Println("wait until idle")
+	// log.Println("wait until idle")
 
 	for e.busy.Read() == gpio.High {
-		log.Println("waiting...")
+		// log.Println("waiting...")
 		time.Sleep(100 * time.Millisecond)
 	}
 }
