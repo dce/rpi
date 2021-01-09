@@ -299,7 +299,7 @@ func (e *Epd) Display(img []byte) {
 	e.sendCommand(0x24);
 
 	for i := 0; i < e.heightByte * e.widthByte / 8; i++ {
-		e.sendData(image[i])
+		e.sendData(img[i])
 	}
 
 	e.sendCommand(0x22);
