@@ -13,6 +13,7 @@ import (
 	"image"
 	"image/color"
 	"time"
+  "log"
 
 	"periph.io/x/periph/conn"
 	"periph.io/x/periph/conn/gpio"
@@ -189,7 +190,10 @@ func (e *Epd) sendData(data byte) {
 }
 
 func (e *Epd) waitUntilIdle() {
+  log("wait until idle")
+
 	for e.busy.Read() == gpio.Low {
+    log("waiting...")
 		time.Sleep(100 * time.Millisecond)
 	}
 }
@@ -221,14 +225,14 @@ func (e *Epd) Init() {
         e.sendData(0xC7);
         e.sendData(0xC3);
         e.sendData(0xC0);
-        e.sendData(0x40); 
+        e.sendData(0x40);
 
         e.sendCommand(0x01);  // Set MUX as 527
         e.sendData(0xAF);
         e.sendData(0x02);
         e.sendData(0x01);//0x01
 
-        e.sendCommand(0x11);  // Data entry mode      
+        e.sendCommand(0x11);  // Data entry mode
         e.sendData(0x01);
         e.sendCommand(0x44);
         e.sendData(0x00); // RAM x address start at 0
@@ -259,8 +263,6 @@ func (e *Epd) Init() {
         e.sendCommand(0x4F);
         e.sendData(0x00);
         e.sendData(0x00);
-
-
 }
 
 // Clear clears the screen.
