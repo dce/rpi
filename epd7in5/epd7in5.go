@@ -13,7 +13,7 @@ import (
 	"image"
 	"image/color"
 	"time"
-  "log"
+	"log"
 
 	"periph.io/x/periph/conn"
 	"periph.io/x/periph/conn/gpio"
@@ -167,7 +167,7 @@ func New(dcPin, csPin, rstPin, busyPin string) (*Epd, error) {
 
 // Reset can be also used to awaken the device.
 func (e *Epd) Reset() {
-  log.Println("Reset")
+	log.Println("Reset")
 	e.rst.Out(gpio.High)
 	time.Sleep(200 * time.Millisecond)
 	e.rst.Out(gpio.Low)
@@ -177,7 +177,7 @@ func (e *Epd) Reset() {
 }
 
 func (e *Epd) sendCommand(cmd byte) {
-  log.Println("sendCommand")
+	log.Println("sendCommand")
 	e.dc.Out(gpio.Low)
 	e.cs.Out(gpio.Low)
 	e.c.Tx([]byte{cmd}, nil)
@@ -185,7 +185,7 @@ func (e *Epd) sendCommand(cmd byte) {
 }
 
 func (e *Epd) sendData(data byte) {
-  log.Println("sendData")
+	log.Println("sendData")
 	e.dc.Out(gpio.High)
 	e.cs.Out(gpio.Low)
 	e.c.Tx([]byte{data}, nil)
@@ -193,10 +193,10 @@ func (e *Epd) sendData(data byte) {
 }
 
 func (e *Epd) waitUntilIdle() {
-  log.Println("wait until idle")
+	log.Println("wait until idle")
 
 	for e.busy.Read() == gpio.Low {
-    log.Println("waiting...")
+		log.Println("waiting...")
 		time.Sleep(100 * time.Millisecond)
 	}
 }
@@ -212,60 +212,60 @@ func (e *Epd) turnOnDisplay() {
 func (e *Epd) Init() {
 	e.Reset()
 
-        e.waitUntilIdle();
-        e.sendCommand(0x12);  // SWRESET
-        e.waitUntilIdle();
+	e.waitUntilIdle();
+	e.sendCommand(0x12);	// SWRESET
+	e.waitUntilIdle();
 
-        e.sendCommand(0x46);  // Auto Write Red RAM
-        e.sendData(0xf7);
-        e.waitUntilIdle();
-        e.sendCommand(0x47);  // Auto Write  B/W RAM
-        e.sendData(0xf7);
-        e.waitUntilIdle();
+	e.sendCommand(0x46);	// Auto Write Red RAM
+	e.sendData(0xf7);
+	e.waitUntilIdle();
+	e.sendCommand(0x47);	// Auto Write	B/W RAM
+	e.sendData(0xf7);
+	e.waitUntilIdle();
 
-        e.sendCommand(0x0C);  // Soft start setting
-        e.sendData(0xAE);
-        e.sendData(0xC7);
-        e.sendData(0xC3);
-        e.sendData(0xC0);
-        e.sendData(0x40);
+	e.sendCommand(0x0C);	// Soft start setting
+	e.sendData(0xAE);
+	e.sendData(0xC7);
+	e.sendData(0xC3);
+	e.sendData(0xC0);
+	e.sendData(0x40);
 
-        e.sendCommand(0x01);  // Set MUX as 527
-        e.sendData(0xAF);
-        e.sendData(0x02);
-        e.sendData(0x01);//0x01
+	e.sendCommand(0x01);	// Set MUX as 527
+	e.sendData(0xAF);
+	e.sendData(0x02);
+	e.sendData(0x01);//0x01
 
-        e.sendCommand(0x11);  // Data entry mode
-        e.sendData(0x01);
-        e.sendCommand(0x44);
-        e.sendData(0x00); // RAM x address start at 0
-        e.sendData(0x00);
-        e.sendData(0x6F);
-        e.sendData(0x03);
-        e.sendCommand(0x45);
-        e.sendData(0xAF);
-        e.sendData(0x02);
-        e.sendData(0x00);
-        e.sendData(0x00);
+	e.sendCommand(0x11);	// Data entry mode
+	e.sendData(0x01);
+	e.sendCommand(0x44);
+	e.sendData(0x00); // RAM x address start at 0
+	e.sendData(0x00);
+	e.sendData(0x6F);
+	e.sendData(0x03);
+	e.sendCommand(0x45);
+	e.sendData(0xAF);
+	e.sendData(0x02);
+	e.sendData(0x00);
+	e.sendData(0x00);
 
-        e.sendCommand(0x3C); // VBD
-        e.sendData(0x05); // LUT1, for white
+	e.sendCommand(0x3C); // VBD
+	e.sendData(0x05); // LUT1, for white
 
-        e.sendCommand(0x18);
-        e.sendData(0X80);
+	e.sendCommand(0x18);
+	e.sendData(0X80);
 
 
-        e.sendCommand(0x22);
-        e.sendData(0XB1); // Load Temperature and waveform setting.
-        e.sendCommand(0x20);
-        e.waitUntilIdle();
+	e.sendCommand(0x22);
+	e.sendData(0XB1); // Load Temperature and waveform setting.
+	e.sendCommand(0x20);
+	e.waitUntilIdle();
 
-        e.sendCommand(0x4E); // set RAM x address count to 0;
-        e.sendData(0x00);
-        e.sendData(0x00);
-        e.sendCommand(0x4F);
-        e.sendData(0x00);
-        e.sendData(0x00);
+	e.sendCommand(0x4E); // set RAM x address count to 0;
+	e.sendData(0x00);
+	e.sendData(0x00);
+	e.sendCommand(0x4F);
+	e.sendData(0x00);
+	e.sendData(0x00);
 }
 
 // Clear clears the screen.
