@@ -293,39 +293,20 @@ func (e *Epd) Clear() {
 
 // Display takes a byte buffer and updates the screen.
 func (e *Epd) Display(img []byte) {
-	e.sendCommand(DATA_START_TRANSMISSION_1)
+	e.send_command(0x4F);
+	e.send_data(0x00);
+	e.send_data(0x00);
+	e.send_command(0x24);
 
-	for j := 0; j < e.heightByte; j++ {
-		for i := 0; i < e.widthByte; i++ {
-			dataBlack := ^img[i+j*e.widthByte]
-
-			for k := 0; k < 8; k++ {
-				var data byte
-
-				if dataBlack&0x80 > 0 {
-					data = 0x00
-				} else {
-					data = 0x03
-				}
-
-				data <<= 4
-				dataBlack <<= 1
-				k++
-
-				if dataBlack&0x80 > 0 {
-					data |= 0x00
-				} else {
-					data |= 0x03
-				}
-
-				dataBlack <<= 1
-
-				e.sendData(data)
-			}
-		}
+	for i := 0; i < e.heightByte * e.widthByte / 8; i++ {
+		e.sendData(image[i])
 	}
 
-	e.turnOnDisplay()
+	e.send_command(0x22);
+	e.send_data(0xF7); // Load LUT from MCU(0x32)
+	e.send_command(0x20);
+	time.Sleep(10);
+	e.waitUntilIdle();
 }
 
 // Sleep put the display in power-saving mode.
