@@ -251,7 +251,7 @@ func (e *Epd) Init() {
         e.sendCommand(0x22);
         e.sendData(0XB1); // Load Temperature and waveform setting.
         e.sendCommand(0x20);
-        e.ReadBusy();
+        e.waitUntilIdle();
 
         e.sendCommand(0x4E); // set RAM x address count to 0;
         e.sendData(0x00);
