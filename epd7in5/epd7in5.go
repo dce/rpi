@@ -195,9 +195,17 @@ func(e *Epd) sendData2(data []byte) {
 	e.dc.Out(gpio.High)
 	e.cs.Out(gpio.Low)
 
-	size := len(data)
-	for i := 0; i < size; i += 4096 {
-		e.c.Tx(data[i:i + 4096], nil)
+	length := len(data)
+	blocksize := 4096
+
+	for start := 0; start < length; start += blocksize {
+		end := start + blocksize
+
+		if end > length {
+			e.c.Tx(data[start:length], nil)
+		} else {
+			e.c.Tx(data[start:end], nil)
+		}
 	}
 
 	e.cs.Out(gpio.High)
