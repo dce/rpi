@@ -266,9 +266,9 @@ func (e *Epd) Clear() {
 	e.sendCommand(0x4F);
 	e.sendData2([]byte{0x00, 0x00});
 	e.sendCommand(0x24);
-	e.sendData(bytes)
+	e.sendData2(bytes)
 	e.sendCommand(0x26)
-	e.sendData(bytes)
+	e.sendData2(bytes)
 	e.sendCommand(0x22);
 	e.sendData(0xF7); // Load LUT from MCU(0x32)
 	e.sendCommand(0x20);
