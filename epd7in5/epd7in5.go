@@ -230,17 +230,17 @@ func (e *Epd) Init() {
 	e.waitUntilIdle();
 
 	e.sendCommand(0x0C);	// Soft start setting
-	e.sendData2([0xAE, 0xC7, 0xC3, 0xC0, 0x40]);
+	e.sendData2([]byte{0xAE, 0xC7, 0xC3, 0xC0, 0x40});
 
 	e.sendCommand(0x01);	// Set MUX as 527
-	e.sendData2([0xAF, 0x02, 0x01]);
+	e.sendData2([]byte{0xAF, 0x02, 0x01});
 
 	e.sendCommand(0x11);	// Data entry mode
 	e.sendData(0x01);
 	e.sendCommand(0x44);
-	e.sendData2([0x00, 0x00, 0x6F, 0x03]);
+	e.sendData2([]byte{0x00, 0x00, 0x6F, 0x03});
 	e.sendCommand(0x45);
-	e.sendData2([0xAF, 0x02, 0x00, 0x00]);
+	e.sendData2([]byte{0xAF, 0x02, 0x00, 0x00});
 
 	e.sendCommand(0x3C); // VBD
 	e.sendData(0x05); // LUT1, for white
@@ -254,9 +254,9 @@ func (e *Epd) Init() {
 	e.waitUntilIdle();
 
 	e.sendCommand(0x4E); // set RAM x address count to 0;
-	e.sendData2([0x00, 0x00]);
+	e.sendData2([]byte{0x00, 0x00});
 	e.sendCommand(0x4F);
-	e.sendData2([0x00, 0x00]);
+	e.sendData2([]byte{0x00, 0x00});
 }
 
 // Clear clears the screen.
@@ -264,7 +264,7 @@ func (e *Epd) Clear() {
 	bytes := byte.Repeat(0xff, e.heightByte * e.widthByte / 8)
 
 	e.sendCommand(0x4F);
-	e.sendData2([0x00, 0x00]);
+	e.sendData2([]byte{0x00, 0x00});
 	e.sendCommand(0x24);
 	e.sendData(bytes)
 	e.sendCommand(0x26)
@@ -279,7 +279,7 @@ func (e *Epd) Clear() {
 // Display takes a byte buffer and updates the screen.
 func (e *Epd) Display(img []byte) {
 	e.sendCommand(0x4F);
-	e.sendData2([0x00, 0x00]);
+	e.sendData2([]byte{0x00, 0x00});
 	e.sendCommand(0x24);
 	e.sendData2(img)
 	e.sendCommand(0x22);
