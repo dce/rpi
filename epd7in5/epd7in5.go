@@ -261,7 +261,7 @@ func (e *Epd) Init() {
 
 // Clear clears the screen.
 func (e *Epd) Clear() {
-	bytes := byte.Repeat(0xff, e.heightByte * e.widthByte / 8)
+	bytes := bytes.Repeat(0xff, e.heightByte * e.widthByte / 8)
 
 	e.sendCommand(0x4F);
 	e.sendData2([]byte{0x00, 0x00});
