@@ -13,7 +13,6 @@ import (
 	"image"
 	"image/color"
 	"time"
-	"log"
 
 	"periph.io/x/periph/conn"
 	"periph.io/x/periph/conn/gpio"
@@ -142,10 +141,6 @@ func New(dcPin, csPin, rstPin, busyPin string) (*Epd, error) {
 		return nil, err
 	}
 
-	if l, ok := port.(conn.Limits); ok {
-		log.Println("MaxTxSize:", l.MaxTxSize())
-	}
-
 	var widthByte, heightByte int
 
 	if EPD_WIDTH%8 == 0 {
@@ -199,7 +194,12 @@ func (e *Epd) sendData(data byte) {
 func(e *Epd) sendData2(data []byte) {
 	e.dc.Out(gpio.High)
 	e.cs.Out(gpio.Low)
-	e.c.Tx(data, nil)
+
+	size := len(data)
+	for i := 0; i < size; i += 4096 {
+		e.c.Tx(data[i:i + 4096], nil)
+	}
+
 	e.cs.Out(gpio.High)
 }
 
