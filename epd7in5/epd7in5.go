@@ -141,6 +141,10 @@ func New(dcPin, csPin, rstPin, busyPin string) (*Epd, error) {
 		return nil, err
 	}
 
+	if l, ok := port.(conn.Limits); ok {
+		log.Println("MaxTxSize:", l.MaxTxSize())
+	}
+
 	var widthByte, heightByte int
 
 	if EPD_WIDTH%8 == 0 {
