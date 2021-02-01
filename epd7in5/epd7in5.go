@@ -196,7 +196,7 @@ func(e *Epd) sendData2(data []byte) {
 	e.cs.Out(gpio.Low)
 
 	length := len(data)
-	blocksize := 1
+	blocksize := 4096
 
 	for start := 0; start < length; start += blocksize {
 		end := start + blocksize
