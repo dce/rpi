@@ -191,6 +191,26 @@ func (e *Epd) sendData(data byte) {
 	e.cs.Out(gpio.High)
 }
 
+func(e *Epd) sendData2(data []byte) {
+	e.dc.Out(gpio.High)
+	e.cs.Out(gpio.Low)
+
+	length := len(data)
+	blocksize := 4096
+
+	for start := 0; start < length; start += blocksize {
+		end := start + blocksize
+
+		if end > length {
+			e.c.Tx(data[start:length], nil)
+		} else {
+			e.c.Tx(data[start:end], nil)
+		}
+	}
+
+	e.cs.Out(gpio.High)
+}
+
 func (e *Epd) waitUntilIdle() {
 	// log.Println("wait until idle")
 
@@ -223,29 +243,17 @@ func (e *Epd) Init() {
 	e.waitUntilIdle();
 
 	e.sendCommand(0x0C);	// Soft start setting
-	e.sendData(0xAE);
-	e.sendData(0xC7);
-	e.sendData(0xC3);
-	e.sendData(0xC0);
-	e.sendData(0x40);
+	e.sendData2([]byte{0xAE, 0xC7, 0xC3, 0xC0, 0x40});
 
 	e.sendCommand(0x01);	// Set MUX as 527
-	e.sendData(0xAF);
-	e.sendData(0x02);
-	e.sendData(0x01);//0x01
+	e.sendData2([]byte{0xAF, 0x02, 0x01});
 
 	e.sendCommand(0x11);	// Data entry mode
 	e.sendData(0x01);
 	e.sendCommand(0x44);
-	e.sendData(0x00); // RAM x address start at 0
-	e.sendData(0x00);
-	e.sendData(0x6F);
-	e.sendData(0x03);
+	e.sendData2([]byte{0x00, 0x00, 0x6F, 0x03});
 	e.sendCommand(0x45);
-	e.sendData(0xAF);
-	e.sendData(0x02);
-	e.sendData(0x00);
-	e.sendData(0x00);
+	e.sendData2([]byte{0xAF, 0x02, 0x00, 0x00});
 
 	e.sendCommand(0x3C); // VBD
 	e.sendData(0x05); // LUT1, for white
@@ -253,37 +261,27 @@ func (e *Epd) Init() {
 	e.sendCommand(0x18);
 	e.sendData(0X80);
 
-
 	e.sendCommand(0x22);
 	e.sendData(0XB1); // Load Temperature and waveform setting.
 	e.sendCommand(0x20);
 	e.waitUntilIdle();
 
 	e.sendCommand(0x4E); // set RAM x address count to 0;
-	e.sendData(0x00);
-	e.sendData(0x00);
+	e.sendData2([]byte{0x00, 0x00});
 	e.sendCommand(0x4F);
-	e.sendData(0x00);
-	e.sendData(0x00);
+	e.sendData2([]byte{0x00, 0x00});
 }
 
 // Clear clears the screen.
 func (e *Epd) Clear() {
+	bytes := bytes.Repeat([]byte{0xff}, e.heightByte * e.widthByte / 8)
+
 	e.sendCommand(0x4F);
-	e.sendData(0x00);
-	e.sendData(0x00);
+	e.sendData2([]byte{0x00, 0x00});
 	e.sendCommand(0x24);
-
-	for i := 0; i < e.heightByte * e.widthByte / 8; i++ {
-		e.sendData(0xff)
-	}
-
+	e.sendData2(bytes)
 	e.sendCommand(0x26)
-
-	for i := 0; i < e.heightByte * e.widthByte / 8; i++ {
-		e.sendData(0xff)
-	}
-
+	e.sendData2(bytes)
 	e.sendCommand(0x22);
 	e.sendData(0xF7); // Load LUT from MCU(0x32)
 	e.sendCommand(0x20);
@@ -294,14 +292,9 @@ func (e *Epd) Clear() {
 // Display takes a byte buffer and updates the screen.
 func (e *Epd) Display(img []byte) {
 	e.sendCommand(0x4F);
-	e.sendData(0x00);
-	e.sendData(0x00);
+	e.sendData2([]byte{0x00, 0x00});
 	e.sendCommand(0x24);
-
-	for i := 0; i < e.heightByte * e.widthByte; i++ {
-    e.sendData(^img[i])
-	}
-
+	e.sendData2(img)
 	e.sendCommand(0x22);
 	e.sendData(0xF7); // Load LUT from MCU(0x32)
 	e.sendCommand(0x20);
